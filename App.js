@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import * as SMS from 'expo-sms';
 
@@ -76,27 +77,27 @@ export default function App() {
   return (
     <SafeAreaView style={styles.safe}>
       <StatusBar style="light" />
-      <View style={styles.container}>
-        <Text style={styles.title}>Let's Do Something</Text>
+      <Text style={styles.title}>Let's Do Something</Text>
 
-        <View style={styles.friendList}>
-          {FRIENDS.map((friend) => {
-            const isOn = selected.has(friend.name);
-            return (
-              <TouchableOpacity
-                key={friend.name}
-                style={[styles.friendBtn, isOn && styles.friendBtnOn]}
-                onPress={() => toggle(friend.name)}
-                activeOpacity={0.75}
-              >
-                <Text style={[styles.friendName, isOn && styles.friendNameOn]}>
-                  {friend.name}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+        {FRIENDS.map((friend) => {
+          const isOn = selected.has(friend.name);
+          return (
+            <TouchableOpacity
+              key={friend.name}
+              style={[styles.friendBtn, isOn && styles.friendBtnOn]}
+              onPress={() => toggle(friend.name)}
+              activeOpacity={0.75}
+            >
+              <Text style={[styles.friendName, isOn && styles.friendNameOn]}>
+                {friend.name}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
 
+      <View style={styles.buttons}>
         <View style={styles.btnRow}>
           <TouchableOpacity
             style={[styles.rogBtn, selected.size === 0 && styles.rogBtnDisabled]}
@@ -115,15 +116,13 @@ export default function App() {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.btnRowFull}>
-          <TouchableOpacity
-            style={[styles.rileBtn, selected.size === 0 && styles.rogBtnDisabled]}
-            onPress={sendRileUp}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.rogBtnText}>Rile Up</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={[styles.rileBtn, selected.size === 0 && styles.rogBtnDisabled]}
+          onPress={sendRileUp}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.rogBtnText}>Rile Up</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -134,22 +133,30 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0d0d0d',
   },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 60,
-    paddingHorizontal: 24,
-  },
   title: {
     fontSize: 32,
     fontWeight: '800',
     color: '#ffffff',
     letterSpacing: 1,
+    textAlign: 'center',
+    paddingTop: 20,
+    paddingBottom: 12,
   },
-  friendList: {
+  scroll: {
+    flex: 1,
     width: '100%',
+    paddingHorizontal: 24,
+  },
+  scrollContent: {
     gap: 14,
+    paddingBottom: 16,
+  },
+  buttons: {
+    width: '100%',
+    paddingHorizontal: 24,
+    paddingBottom: 24,
+    paddingTop: 12,
+    gap: 12,
   },
   friendBtn: {
     width: '100%',
@@ -193,9 +200,6 @@ const styles = StyleSheet.create({
   },
   rogBtnDisabled: {
     backgroundColor: '#333',
-  },
-  btnRowFull: {
-    width: '100%',
   },
   rileBtn: {
     width: '100%',
