@@ -16,10 +16,20 @@ const FRIENDS = [
   { name: 'Brendan', phone: '+14847534772' },
   { name: 'Alec', phone: '+18049382532' },
   { name: 'J', phone: '' },
+  { name: 'Luke', phone: '+17047376773' },
+  { name: 'Harrison', phone: '+17046498781' },
+  { name: 'East', phone: '+18044322434' },
+];
+
+const RILE_UP_MESSAGES = [
+  "Ashame none of you booze anymore",
+  "I'm the reason you got a bid",
+  "Crazy I know more ball than the 3 of you combined lol",
 ];
 
 export default function App() {
   const [selected, setSelected] = useState(new Set());
+  const [rileIndex, setRileIndex] = useState(0);
 
   const toggle = (name) => {
     setSelected((prev) => {
@@ -27,6 +37,21 @@ export default function App() {
       next.has(name) ? next.delete(name) : next.add(name);
       return next;
     });
+  };
+
+  const sendRileUp = async () => {
+    if (selected.size === 0) {
+      Alert.alert('Select someone first');
+      return;
+    }
+    const isAvailable = await SMS.isAvailableAsync();
+    if (!isAvailable) {
+      Alert.alert('SMS is not available on this device');
+      return;
+    }
+    const addresses = FRIENDS.filter((f) => selected.has(f.name)).map((f) => f.phone);
+    await SMS.sendSMSAsync(addresses, RILE_UP_MESSAGES[rileIndex]);
+    setRileIndex((prev) => (prev + 1) % RILE_UP_MESSAGES.length);
   };
 
   const send = async (message, emptyAlert) => {
@@ -87,6 +112,16 @@ export default function App() {
             activeOpacity={0.8}
           >
             <Text style={styles.rogBtnText}>Booze</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.btnRowFull}>
+          <TouchableOpacity
+            style={[styles.rileBtn, selected.size === 0 && styles.rogBtnDisabled]}
+            onPress={sendRileUp}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.rogBtnText}>Rile Up</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -158,6 +193,16 @@ const styles = StyleSheet.create({
   },
   rogBtnDisabled: {
     backgroundColor: '#333',
+  },
+  btnRowFull: {
+    width: '100%',
+  },
+  rileBtn: {
+    width: '100%',
+    paddingVertical: 28,
+    borderRadius: 20,
+    backgroundColor: '#ff6b6b',
+    alignItems: 'center',
   },
   rogBtnText: {
     fontSize: 20,
