@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "time-to-rog",
-    "slug": "time-to-rog",
+    "name": "Lets Do Something",
+    "slug": "lets-do-something",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
